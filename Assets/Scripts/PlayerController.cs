@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
+
     public float speed;
     public float JumpForce;
     private float MoveInput;
@@ -25,6 +27,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
         extraJumps = maxExtraJumps;
+        PlatformLogic.OnScoreEvent += Platform_OnScoreEvent;
     }
 
     private void FixedUpdate()
@@ -56,19 +59,13 @@ public class PlayerController : MonoBehaviour
             rb.velocity = Vector2.up * JumpForce;
         }
 
-        if(isGrounded == true)
-        {
-            extraJumps = maxExtraJumps;
-        }
 
-        if(rb.velocity.y > 0.01)
-        {
-            Physics.IgnoreLayerCollision(1, 1, true);
-        }
-        else
-        {
-            Physics.IgnoreLayerCollision(9, 8, false);
-        }
+        transform.rotation = new Quaternion();
+    }
+
+    private void Platform_OnScoreEvent(float score)
+    {
+        extraJumps = maxExtraJumps;
     }
 
     void Flip()
